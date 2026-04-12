@@ -1,0 +1,148 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: auto;
+  overflow-x: hidden;
+}
+
+body {
+  background: #060810;
+  color: #e8e8e8;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #00d4aa30; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #00d4aa60; }
+
+/* ── Range input ── */
+input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 3px;
+  border-radius: 2px;
+  background: #1e2235;
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #00d4aa;
+  cursor: pointer;
+  border: 2px solid #060810;
+  box-shadow: 0 0 8px #00d4aa88, 0 0 20px #00d4aa33;
+}
+
+button { font-family: inherit; }
+
+/* ── 3D Glass Card ── */
+.card {
+  background: linear-gradient(145deg, #0d1120 0%, #0a0d18 100%);
+  border-radius: 16px;
+  border: 1px solid #ffffff0a;
+  box-shadow:
+    0 1px 0 0 #ffffff08 inset,
+    0 -1px 0 0 #00000040 inset,
+    0 4px 24px #00000060,
+    0 1px 4px #00000080;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #ffffff14, transparent);
+  pointer-events: none;
+}
+
+/* ── Glow card variant ── */
+.card-glow {
+  background: linear-gradient(145deg, #0d1120 0%, #0a0d18 100%);
+  border-radius: 16px;
+  border: 1px solid #00d4aa18;
+  box-shadow:
+    0 0 0 1px #00d4aa08,
+    0 4px 32px #00000070,
+    0 0 60px #00d4aa08;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Label ── */
+.label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #4a5070;
+}
+
+/* ── Tag ── */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 5px;
+  text-transform: uppercase;
+}
+
+/* ── Keyframes ── */
+@keyframes blink    { 0%,100%{opacity:1} 50%{opacity:0.2} }
+@keyframes pulse-ring {
+  0%   { opacity:0.7; transform:scale(1); }
+  100% { opacity:0;   transform:scale(1.7); }
+}
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(6px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+@keyframes float {
+  0%,100% { transform: translateY(0px); }
+  50%     { transform: translateY(-4px); }
+}
+@keyframes glow-pulse {
+  0%,100% { box-shadow: 0 0 20px #00d4aa22; }
+  50%     { box-shadow: 0 0 40px #00d4aa44, 0 0 80px #00d4aa18; }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes shake {
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-3px)}
+  40%{transform:translateX(3px)}
+  60%{transform:translateX(-2px)}
+  80%{transform:translateX(2px)}
+}
+@keyframes map-pulse {
+  0%   { opacity:0.8; transform:scale(1); }
+  100% { opacity:0;   transform:scale(2); }
+}
+@keyframes flow {
+  0%   { stroke-dashoffset:20; }
+  100% { stroke-dashoffset:0; }
+}
+@keyframes number-up {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
