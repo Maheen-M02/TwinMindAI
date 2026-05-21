@@ -79,8 +79,8 @@ export default function Landing3D() {
           dither={0.15}
           curvature={0.12}
           tint="#00ffb7"
-          mouseReact={true}
-          mouseStrength={0.5}
+          mouseReact={false}
+          mouseStrength={0.0}
           pageLoadAnimation={false}
           brightness={0.7}
         />
