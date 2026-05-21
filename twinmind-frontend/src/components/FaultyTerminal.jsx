@@ -38,8 +38,6 @@ uniform float uPageLoadProgress;
 uniform float uUsePageLoadAnimation;
 uniform float uBrightness;
 
-float time;
-
 float hash21(vec2 p){
   p = fract(p * 234.56);
   p += dot(p, p + 34.56);
@@ -48,6 +46,7 @@ float hash21(vec2 p){
 
 float noise(vec2 p)
 {
+  float time = iTime * 0.333333;
   return sin(p.x * 10.0) * sin(p.y * (3.0 + sin(time * 0.090909))) + 0.2; 
 }
 
@@ -60,6 +59,7 @@ mat2 rotate(float angle)
 
 float fbm(vec2 p)
 {
+  float time = iTime * 0.333333;
   p *= 1.1;
   float f = 0.0;
   float amp = 0.5 * uNoiseAmp;
@@ -81,6 +81,7 @@ float fbm(vec2 p)
 }
 
 float pattern(vec2 p, out vec2 q, out vec2 r) {
+  float time = iTime * 0.333333;
   vec2 offset1 = vec2(1.0);
   vec2 offset0 = vec2(0.0);
   mat2 rot01 = rotate(0.1 * time);
@@ -92,6 +93,7 @@ float pattern(vec2 p, out vec2 q, out vec2 r) {
 }
 
 float digit(vec2 p){
+    float time = iTime * 0.333333;
     vec2 grid = uGridMul * 15.0;
     vec2 s = floor(p * grid) / grid;
     p = p * grid;
@@ -149,7 +151,7 @@ float displace(vec2 look)
 }
 
 vec3 getColor(vec2 p){
-    
+    float time = iTime * 0.333333;
     float bar = step(mod(p.y + time * 20.0, 1.0), 0.2) * 0.4 + 1.0;
     bar *= uScanlineIntensity;
     
@@ -180,7 +182,6 @@ vec2 barrel(vec2 uv){
 }
 
 void main() {
-    time = iTime * 0.333333;
     vec2 uv = vUv;
 
     if(uCurvature != 0.0){
@@ -247,10 +248,10 @@ export default function FaultyTerminal({
   const rendererRef = useRef(null);
   const mouseRef = useRef({ x: 0.5, y: 0.5 });
   const smoothMouseRef = useRef({ x: 0.5, y: 0.5 });
-  const frozenTimeRef = useRef(0);
+  const lastTimeRef = useRef(0);
+  const timeRef = useRef(Math.random() * 100);
   const rafRef = useRef(0);
   const loadAnimationStartRef = useRef(0);
-  const timeOffsetRef = useRef(Math.random() * 100);
 
   const tintVec = useMemo(() => hexToRgb(tint), [tint]);
 
@@ -280,7 +281,7 @@ export default function FaultyTerminal({
       vertex: vertexShader,
       fragment: fragmentShader,
       uniforms: {
-        iTime: { value: 0 },
+        iTime: { value: timeRef.current },
         iResolution: {
           value: new Color(gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height)
         },
@@ -327,17 +328,20 @@ export default function FaultyTerminal({
     const update = t => {
       rafRef.current = requestAnimationFrame(update);
 
+      if (lastTimeRef.current === 0) {
+        lastTimeRef.current = t;
+      }
+      const delta = (t - lastTimeRef.current) * 0.001;
+      lastTimeRef.current = t;
+
       if (pageLoadAnimation && loadAnimationStartRef.current === 0) {
         loadAnimationStartRef.current = t;
       }
 
       if (!pause) {
-        const elapsed = (t * 0.001 + timeOffsetRef.current) * timeScale;
-        program.uniforms.iTime.value = elapsed;
-        frozenTimeRef.current = elapsed;
-      } else {
-        program.uniforms.iTime.value = frozenTimeRef.current;
+        timeRef.current += delta * timeScale;
       }
+      program.uniforms.iTime.value = timeRef.current;
 
       if (pageLoadAnimation && loadAnimationStartRef.current > 0) {
         const animationDuration = 2000;
@@ -347,15 +351,10 @@ export default function FaultyTerminal({
       }
 
       if (mouseReact) {
-        const dampingFactor = 0.08;
-        const smoothMouse = smoothMouseRef.current;
         const mouse = mouseRef.current;
-        smoothMouse.x += (mouse.x - smoothMouse.x) * dampingFactor;
-        smoothMouse.y += (mouse.y - smoothMouse.y) * dampingFactor;
-
         const mouseUniform = program.uniforms.uMouse.value;
-        mouseUniform[0] = smoothMouse.x;
-        mouseUniform[1] = smoothMouse.y;
+        mouseUniform[0] = mouse.x;
+        mouseUniform[1] = mouse.y;
       }
 
       renderer.render({ scene: mesh });
@@ -363,16 +362,16 @@ export default function FaultyTerminal({
     rafRef.current = requestAnimationFrame(update);
     ctn.appendChild(gl.canvas);
 
-    if (mouseReact) ctn.addEventListener('mousemove', handleMouseMove);
+    if (mouseReact) window.addEventListener('mousemove', handleMouseMove);
 
     return () => {
       cancelAnimationFrame(rafRef.current);
       resizeObserver.disconnect();
-      if (mouseReact) ctn.removeEventListener('mousemove', handleMouseMove);
+      if (mouseReact) window.removeEventListener('mousemove', handleMouseMove);
       if (gl.canvas.parentElement === ctn) ctn.removeChild(gl.canvas);
       gl.getExtension('WEBGL_lose_context')?.loseContext();
       loadAnimationStartRef.current = 0;
-      timeOffsetRef.current = Math.random() * 100;
+      lastTimeRef.current = 0;
     };
   }, [
     dpr,
