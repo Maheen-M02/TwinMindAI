@@ -22,8 +22,18 @@ const SYSTEM_LOGS = [
 export default function Landing3D() {
   const navigate = useNavigate()
   const [loaded, setLoaded] = useState(false)
-  const [logs, setLogs] = useState([SYSTEM_LOGS[0], SYSTEM_LOGS[1], SYSTEM_LOGS[2]])
+  const [logs, setLogs] = useState(() => {
+    const saved = sessionStorage.getItem('landing_logs')
+    return saved ? JSON.parse(saved) : [SYSTEM_LOGS[0], SYSTEM_LOGS[1], SYSTEM_LOGS[2]]
+  })
   const logIndexRef = useRef(3)
+
+  useEffect(() => {
+    const savedIndex = sessionStorage.getItem('landing_log_index')
+    if (savedIndex) {
+      logIndexRef.current = parseInt(savedIndex, 10)
+    }
+  }, [])
   const consoleEndRef = useRef(null)
 
   // Append a live log message every 1.8 seconds to make the UI feel alive
@@ -32,8 +42,10 @@ export default function Landing3D() {
       setLogs((prev) => {
         const nextLog = SYSTEM_LOGS[logIndexRef.current]
         logIndexRef.current = (logIndexRef.current + 1) % SYSTEM_LOGS.length
-        // Keep last 8 logs
-        return [...prev.slice(-7), nextLog]
+        sessionStorage.setItem('landing_log_index', logIndexRef.current.toString())
+        const nextLogs = [...prev.slice(-7), nextLog]
+        sessionStorage.setItem('landing_logs', JSON.stringify(nextLogs))
+        return nextLogs
       })
     }, 1800)
 

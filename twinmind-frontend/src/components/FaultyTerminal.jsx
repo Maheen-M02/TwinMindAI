@@ -248,10 +248,24 @@ export default function FaultyTerminal({
   const rendererRef = useRef(null);
   const mouseRef = useRef({ x: 0.5, y: 0.5 });
   const smoothMouseRef = useRef({ x: 0.5, y: 0.5 });
+  const getInitialTime = () => {
+    const savedTime = sessionStorage.getItem('faulty_terminal_time');
+    return savedTime ? parseFloat(savedTime) : Math.random() * 100;
+  };
+  const timeRef = useRef(getInitialTime());
   const lastTimeRef = useRef(0);
-  const timeRef = useRef(Math.random() * 100);
   const rafRef = useRef(0);
   const loadAnimationStartRef = useRef(0);
+
+  useEffect(() => {
+    const handleUnload = () => {
+      sessionStorage.setItem('faulty_terminal_time', timeRef.current.toString());
+    };
+    window.addEventListener('beforeunload', handleUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleUnload);
+    };
+  }, []);
 
   const tintVec = useMemo(() => hexToRgb(tint), [tint]);
 
