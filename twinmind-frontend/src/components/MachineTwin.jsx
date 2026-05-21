@@ -1,22 +1,21 @@
 import React, { useEffect, useRef } from 'react'
 
-const SC = { HEALTHY: '#00d4aa', WARNING: '#ffb800', CRITICAL: '#ff3030' }
+const SC = { HEALTHY: '#00a888', WARNING: '#ff9500', CRITICAL: '#ff3b30' }
 
 function MetricBar({ label, value, max, color, unit = '' }) {
   const pct = Math.min(100, Math.max(0, (value / max) * 100))
   return (
-    <div style={{ marginBottom: 9 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, marginBottom: 4 }}>
-        <span style={{ color: '#3a4060' }}>{label}</span>
-        <span style={{ color: '#6a7090', fontWeight: 600 }}>{typeof value === 'number' ? value.toFixed(1) : '—'}{unit}</span>
+    <div style={{ marginBottom: 14 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, marginBottom: 6, fontWeight: 800 }}>
+        <span style={{ color: '#333333' }}>{label}</span>
+        <span style={{ color: '#000000', fontWeight: 900 }}>{typeof value === 'number' ? value.toFixed(1) : '—'}{unit}</span>
       </div>
-      <div style={{ background: '#060810', borderRadius: 3, height: 4,
-        overflow: 'hidden', boxShadow: 'inset 0 1px 3px #00000080' }}>
+      <div style={{ background: '#f5f5f5', borderRadius: 5, height: 8,
+        overflow: 'hidden', border: '2px solid #e0e0e0' }}>
         <div style={{
           width: `${pct}%`, height: '100%',
-          background: `linear-gradient(90deg, ${color}66, ${color})`,
-          borderRadius: 3, transition: 'width 0.5s cubic-bezier(0.4,0,0.2,1)',
-          boxShadow: `0 0 6px ${color}66`,
+          background: `linear-gradient(90deg, ${color}cc, ${color})`,
+          borderRadius: 4, transition: 'width 0.5s cubic-bezier(0.4,0,0.2,1)',
         }} />
       </div>
     </div>
@@ -26,15 +25,15 @@ function MetricBar({ label, value, max, color, unit = '' }) {
 function StatCard({ label, value, color, sub }) {
   return (
     <div style={{
-      background: 'linear-gradient(145deg, #0a0d18, #060810)',
-      borderRadius: 10, padding: '12px 14px', flex: 1, textAlign: 'center',
-      border: '1px solid #ffffff08',
-      boxShadow: `0 0 20px ${color}10, inset 0 1px 0 #ffffff06`,
+      background: '#ffffff',
+      borderRadius: 12, padding: '20px 16px', flex: 1, textAlign: 'center',
+      border: '3px solid #e0e0e0',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
     }}>
-      <div style={{ fontSize: 22, fontWeight: 800, color,
-        textShadow: `0 0 20px ${color}66`, lineHeight: 1 }}>{value}</div>
-      <div style={{ fontSize: 8, color: '#2a3050', marginTop: 4, letterSpacing: '0.08em' }}>{label}</div>
-      {sub && <div style={{ fontSize: 8, color: '#1a2030', marginTop: 1 }}>{sub}</div>}
+      <div style={{ fontSize: 34, fontWeight: 900, color,
+        lineHeight: 1 }}>{value}</div>
+      <div style={{ fontSize: 11, color: '#333333', marginTop: 6, letterSpacing: '0.12em', fontWeight: 900 }}>{label}</div>
+      {sub && <div style={{ fontSize: 11, color: '#666666', marginTop: 3, fontWeight: 700 }}>{sub}</div>}
     </div>
   )
 }
@@ -73,32 +72,31 @@ export default function MachineTwin({ machine }) {
 
   return (
     <div className="card" style={{
-      padding: 20,
-      border: `1px solid ${color}20`,
-      boxShadow: `0 0 40px ${color}10, 0 4px 24px #00000060, inset 0 1px 0 #ffffff08`,
+      padding: 26,
+      border: `3px solid ${color}`,
       animation: isCrit ? 'shake 0.35s infinite' : 'none',
     }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <div style={{
-            width: 10, height: 10, borderRadius: '50%', background: color,
-            boxShadow: `0 0 12px ${color}, 0 0 24px ${color}66`,
+            width: 16, height: 16, borderRadius: '50%', background: color,
+            boxShadow: `0 0 12px ${color}80`,
             animation: isCrit ? 'blink 0.6s infinite' : 'none',
           }} />
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#c8c8d8' }}>
+          <span style={{ fontSize: 18, fontWeight: 900, color: '#000000' }}>
             {machine?.machine_id || '—'} Digital Twin
           </span>
         </div>
-        <div style={{ display: 'flex', gap: 5 }}>
+        <div style={{ display: 'flex', gap: 8 }}>
           {isAnom && (
-            <span style={{ fontSize: 8, fontWeight: 800, padding: '3px 7px', borderRadius: 4,
-              background: '#ff303018', color: '#ff3030', letterSpacing: '0.08em',
-              border: '1px solid #ff303030', boxShadow: '0 0 12px #ff303020' }}>ANOMALY</span>
+            <span style={{ fontSize: 12, fontWeight: 900, padding: '6px 12px', borderRadius: 8,
+              background: '#ff3b3015', color: '#ff3b30', letterSpacing: '0.1em',
+              border: '3px solid #ff3b30' }}>ANOMALY</span>
           )}
-          <span style={{ fontSize: 8, fontWeight: 800, padding: '3px 7px', borderRadius: 4,
-            background: color + '18', color, letterSpacing: '0.08em',
-            border: `1px solid ${color}30`, boxShadow: `0 0 12px ${color}20` }}>{status}</span>
+          <span style={{ fontSize: 12, fontWeight: 900, padding: '6px 12px', borderRadius: 8,
+            background: color + '15', color, letterSpacing: '0.1em',
+            border: `3px solid ${color}` }}>{status}</span>
         </div>
       </div>
 
@@ -203,38 +201,38 @@ export default function MachineTwin({ machine }) {
 
       {/* Metric bars */}
       <MetricBar label="HPC Outlet Temp" value={temp}  max={1480} color="#ff6b35" unit="°" />
-      <MetricBar label="HPC Pressure"    value={vib}   max={52}   color="#ffb800" />
-      <MetricBar label="Bleed Enthalpy"  value={rpm}   max={9200} color="#00d4aa" />
-      <MetricBar label="Fuel Flow"       value={machine?.s12 || 521} max={530} color="#cc44ff" />
+      <MetricBar label="HPC Pressure"    value={vib}   max={52}   color="#ff9500" />
+      <MetricBar label="Bleed Enthalpy"  value={rpm}   max={9200} color="#00a888" />
+      <MetricBar label="Fuel Flow"       value={machine?.s12 || 521} max={530} color="#af52de" />
 
       {/* Stat cards */}
-      <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
+      <div style={{ display: 'flex', gap: 12, marginTop: 18 }}>
         <StatCard label="HEALTH"    value={`${machine?.health_score?.toFixed(0) ?? '—'}%`} color={color} />
         <StatCard label="FAIL PROB" value={`${(fp * 100).toFixed(1)}%`}
-          color={fp > 0.7 ? '#ff3030' : fp > 0.4 ? '#ffb800' : '#00d4aa'} />
-        <StatCard label="RUL" value={machine?.rul_cycles ?? '—'} color="#4a5070" sub="cycles" />
+          color={fp > 0.7 ? '#ff3b30' : fp > 0.4 ? '#ff9500' : '#00a888'} />
+        <StatCard label="RUL" value={machine?.rul_cycles ?? '—'} color="#333333" sub="cycles" />
       </div>
 
       {/* Top drivers */}
       {topDrivers.length > 0 && (
-        <div style={{ marginTop: 14, padding: '12px 14px',
-          background: 'linear-gradient(145deg, #080b14, #060810)',
-          borderRadius: 10, border: '1px solid #ffffff06',
-          boxShadow: 'inset 0 1px 0 #ffffff04' }}>
-          <div style={{ fontSize: 8, color: '#2a3050', fontWeight: 800,
-            letterSpacing: '0.12em', marginBottom: 9 }}>TOP FAILURE DRIVERS</div>
+        <div style={{ marginTop: 18, padding: '16px 18px',
+          background: '#ffffff',
+          borderRadius: 12, border: '3px solid #e0e0e0',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+          <div style={{ fontSize: 11, color: '#333333', fontWeight: 900,
+            letterSpacing: '0.16em', marginBottom: 13 }}>TOP FAILURE DRIVERS</div>
           {topDrivers.map((d, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8,
-              marginBottom: i < topDrivers.length - 1 ? 7 : 0 }}>
-              <div style={{ width: 4, height: 4, borderRadius: '50%', background: color,
-                boxShadow: `0 0 6px ${color}`, flexShrink: 0 }} />
-              <span style={{ fontSize: 10, color: '#4a5070', flex: 1 }}>{d.label}</span>
-              <div style={{ width: 60, background: '#0a0d18', borderRadius: 2, height: 3, overflow: 'hidden' }}>
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10,
+              marginBottom: i < topDrivers.length - 1 ? 11 : 0 }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: color,
+                flexShrink: 0 }} />
+              <span style={{ fontSize: 14, color: '#000000', flex: 1, fontWeight: 700 }}>{d.label}</span>
+              <div style={{ width: 80, background: '#f5f5f5', borderRadius: 4, height: 6, overflow: 'hidden',
+                border: '2px solid #e0e0e0' }}>
                 <div style={{ width: `${Math.min(100, d.importance * 500)}%`, height: '100%',
-                  background: `linear-gradient(90deg, ${color}66, ${color})`,
-                  boxShadow: `0 0 4px ${color}` }} />
+                  background: `linear-gradient(90deg, ${color}cc, ${color})` }} />
               </div>
-              <span style={{ fontSize: 9, color: '#2a3050', width: 34, textAlign: 'right' }}>
+              <span style={{ fontSize: 13, color: '#333333', width: 48, textAlign: 'right', fontWeight: 800 }}>
                 {(d.importance * 100).toFixed(1)}%
               </span>
             </div>

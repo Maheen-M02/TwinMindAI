@@ -7,45 +7,40 @@ import ProactiveAgent from '../components/ProactiveAgent'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
-function KpiCard({ icon: Icon, label, value, sub, color = '#00d4aa', onClick }) {
+function KpiCard({ icon: Icon, label, value, sub, color = '#00a888', onClick }) {
   return (
     <div onClick={onClick} style={{
-      background: 'linear-gradient(145deg, #0d1120 0%, #0a0d18 100%)',
-      borderRadius: 16, padding: '20px 22px',
-      border: `1px solid ${color}18`,
+      background: '#ffffff',
+      borderRadius: 16, padding: '28px 30px',
+      border: `3px solid ${color}`,
       cursor: onClick ? 'pointer' : 'default',
       transition: 'all 0.25s cubic-bezier(0.4,0,0.2,1)',
-      boxShadow: `0 0 30px ${color}0c, 0 4px 20px #00000060, inset 0 1px 0 #ffffff08`,
+      boxShadow: `0 4px 12px rgba(0,0,0,0.08)`,
       position: 'relative', overflow: 'hidden',
     }}
-    onMouseEnter={e => { if (onClick) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = `0 0 40px ${color}18, 0 8px 30px #00000070, inset 0 1px 0 #ffffff08` } }}
-    onMouseLeave={e => { if (onClick) { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 0 30px ${color}0c, 0 4px 20px #00000060, inset 0 1px 0 #ffffff08` } }}
+    onMouseEnter={e => { if (onClick) { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = `0 8px 20px rgba(0,0,0,0.12)` } }}
+    onMouseLeave={e => { if (onClick) { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 4px 12px rgba(0,0,0,0.08)` } }}
     >
       {/* Top accent */}
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-        background: `linear-gradient(90deg, transparent, ${color}60, transparent)` }} />
-      {/* Corner glow */}
-      <div style={{ position: 'absolute', top: -20, right: -20, width: 80, height: 80,
-        background: `radial-gradient(circle, ${color}14, transparent 70%)` }} />
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4,
+        background: color }} />
 
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
-        <div style={{ width: 36, height: 36, borderRadius: 10,
-          background: `linear-gradient(135deg, ${color}20, ${color}0c)`,
-          border: `1px solid ${color}25`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: `0 0 16px ${color}20` }}>
-          <Icon size={16} color={color} />
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 18 }}>
+        <div style={{ width: 48, height: 48, borderRadius: 12,
+          background: color + '15',
+          border: `3px solid ${color}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Icon size={24} color={color} strokeWidth={3} />
         </div>
         {onClick && (
-          <div style={{ fontSize: 8, color: color + '66', letterSpacing: '0.1em' }}>VIEW →</div>
+          <div style={{ fontSize: 12, color: color, letterSpacing: '0.1em', fontWeight: 800 }}>VIEW →</div>
         )}
       </div>
-      <div style={{ fontSize: 9, color: '#2a3050', fontWeight: 800,
-        letterSpacing: '0.1em', marginBottom: 6 }}>{label}</div>
-      <div style={{ fontSize: 32, fontWeight: 800, color,
-        lineHeight: 1, letterSpacing: '-0.02em',
-        textShadow: `0 0 30px ${color}44` }}>{value}</div>
-      {sub && <div style={{ fontSize: 10, color: '#2a3050', marginTop: 5 }}>{sub}</div>}
+      <div style={{ fontSize: 12, color: '#333333', fontWeight: 900,
+        letterSpacing: '0.14em', marginBottom: 8 }}>{label}</div>
+      <div style={{ fontSize: 44, fontWeight: 900, color,
+        lineHeight: 1, letterSpacing: '-0.02em' }}>{value}</div>
+      {sub && <div style={{ fontSize: 14, color: '#666666', marginTop: 8, fontWeight: 700 }}>{sub}</div>}
     </div>
   )
 }
@@ -74,49 +69,47 @@ export default function OverviewPage({ data, navigate }) {
       <AlertBanner data={data} />
 
       {/* Header */}
-      <div style={{ padding: '22px 24px 0',
+      <div style={{ padding: '30px 32px 0',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: '#e8e8e8',
-            letterSpacing: '-0.02em',
-            background: 'linear-gradient(90deg, #e8e8e8, #8888aa)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+          <h1 style={{ fontSize: 32, fontWeight: 900, color: '#000000',
+            letterSpacing: '-0.02em' }}>
             Factory Overview
           </h1>
-          <p style={{ fontSize: 11, color: '#3a4060', marginTop: 3 }}>
+          <p style={{ fontSize: 16, color: '#333333', marginTop: 6, fontWeight: 700 }}>
             Real-time health across all machines
           </p>
         </div>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <span style={{ fontSize: 9, color: '#2a3050', letterSpacing: '0.08em' }}>DEMO:</span>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+          <span style={{ fontSize: 14, color: '#333333', letterSpacing: '0.1em', fontWeight: 900 }}>DEMO:</span>
           {['M1', 'M2', 'M3'].map(mid => (
             <button key={mid} onClick={() => triggerFailure(mid)} style={{
-              background: 'linear-gradient(135deg, #ff303018, #ff303008)',
-              border: '1px solid #ff303030', borderRadius: 8,
-              padding: '6px 12px', cursor: 'pointer',
-              color: '#ff3030', fontSize: 10, fontWeight: 800,
-              letterSpacing: '0.06em', transition: 'all 0.15s',
-              boxShadow: '0 0 12px #ff303010',
+              background: '#ff3b3015',
+              border: '3px solid #ff3b30', borderRadius: 10,
+              padding: '10px 16px', cursor: 'pointer',
+              color: '#ff3b30', fontSize: 14, fontWeight: 900,
+              letterSpacing: '0.08em', transition: 'all 0.15s',
+              boxShadow: '0 2px 8px rgba(255,59,48,0.15)',
             }}
-            onMouseEnter={e => e.currentTarget.style.boxShadow = '0 0 20px #ff303030'}
-            onMouseLeave={e => e.currentTarget.style.boxShadow = '0 0 12px #ff303010'}
+            onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(255,59,48,0.25)'}
+            onMouseLeave={e => e.currentTarget.style.boxShadow = '0 2px 8px rgba(255,59,48,0.15)'}
             >⚡ {mid}</button>
           ))}
         </div>
       </div>
 
-      <div style={{ padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div style={{ padding: '18px 28px', display: 'flex', flexDirection: 'column', gap: 18 }}>
         {/* KPI row */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
-          <KpiCard icon={Activity}      label="AVG HEALTH"      value={`${avgHealth}%`} color="#00d4aa" />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14 }}>
+          <KpiCard icon={Activity}      label="AVG HEALTH"      value={`${avgHealth}%`} color="#00a888" />
           <KpiCard icon={TrendingUp}    label="AVG FAIL PROB"   value={`${avgFp}%`}
-            color={parseFloat(avgFp) > 40 ? '#ff3030' : '#ffb800'} />
+            color={parseFloat(avgFp) > 40 ? '#ff3b30' : '#ff9500'} />
           <KpiCard icon={AlertTriangle} label="ACTIVE ALERTS"   value={warning + critical}
             sub={`${critical} critical · ${warning} warning`}
-            color={critical > 0 ? '#ff3030' : warning > 0 ? '#ffb800' : '#00d4aa'}
+            color={critical > 0 ? '#ff3b30' : warning > 0 ? '#ff9500' : '#00a888'}
             onClick={() => navigate('/analytics')} />
           <KpiCard icon={Cpu}           label="MACHINES ONLINE" value={`${healthy}/${machines.length}`}
-            sub="healthy machines" color="#00d4aa"
+            sub="healthy machines" color="#00a888"
             onClick={() => navigate('/twin')} />
         </div>
 

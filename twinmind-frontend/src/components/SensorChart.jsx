@@ -5,9 +5,9 @@ const BUFFER_SIZE = 60
 
 const CHARTS = [
   { key: 's4',  label: 'HPC Outlet Temp', color: '#ff6b35', unit: '°', baseline: 1407 },
-  { key: 's11', label: 'HPC Pressure',    color: '#ffb800', unit: '',  baseline: 47.5 },
-  { key: 's9',  label: 'Bleed Enthalpy',  color: '#00d4aa', unit: '',  baseline: 9055 },
-  { key: 's12', label: 'Fuel Flow',       color: '#cc44ff', unit: '',  baseline: 522  },
+  { key: 's11', label: 'HPC Pressure',    color: '#ff9500', unit: '',  baseline: 47.5 },
+  { key: 's9',  label: 'Bleed Enthalpy',  color: '#00a888', unit: '',  baseline: 9055 },
+  { key: 's12', label: 'Fuel Flow',       color: '#af52de', unit: '',  baseline: 522  },
 ]
 
 function MiniChart({ data, dataKey, color, label, unit, baseline }) {
@@ -19,47 +19,46 @@ function MiniChart({ data, dataKey, color, label, unit, baseline }) {
 
   return (
     <div style={{
-      background: 'linear-gradient(145deg, #0a0d18, #080b14)',
-      borderRadius: 12, padding: '12px 14px',
-      border: '1px solid #ffffff08',
-      boxShadow: `0 0 20px ${color}08, inset 0 1px 0 #ffffff06`,
+      background: '#ffffff',
+      borderRadius: 14, padding: '16px 18px',
+      border: '3px solid #e0e0e0',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
       position: 'relative', overflow: 'hidden',
     }}>
       {/* Color accent line */}
       <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-        background: `linear-gradient(90deg, transparent, ${color}66, transparent)`,
+        position: 'absolute', top: 0, left: 0, right: 0, height: 4,
+        background: color,
       }} />
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-        <span style={{ fontSize: 9, color: '#3a4060', fontWeight: 700, letterSpacing: '0.08em' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+        <span style={{ fontSize: 12, color: '#333333', fontWeight: 900, letterSpacing: '0.12em' }}>
           {label.toUpperCase()}
         </span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {(up || down) && (
-            <span style={{ fontSize: 9, color: up ? '#ff6b35' : '#00d4aa', fontWeight: 700 }}>
+            <span style={{ fontSize: 13, color: up ? '#ff6b35' : '#00a888', fontWeight: 900 }}>
               {up ? '▲' : '▼'} {Math.abs(trend).toFixed(2)}
             </span>
           )}
-          <span style={{ fontSize: 14, fontWeight: 800, color,
-            textShadow: `0 0 16px ${color}66` }}>
+          <span style={{ fontSize: 20, fontWeight: 900, color }}>
             {current != null ? `${current.toFixed(1)}${unit}` : '—'}
           </span>
         </div>
       </div>
 
-      <ResponsiveContainer width="100%" height={52}>
+      <ResponsiveContainer width="100%" height={60}>
         <LineChart data={data} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-          <ReferenceLine y={baseline} stroke={color + '20'} strokeDasharray="3 3" />
+          <ReferenceLine y={baseline} stroke={color + '40'} strokeDasharray="3 3" strokeWidth={2} />
           <Line type="monotone" dataKey={dataKey} stroke={color} dot={false}
-            strokeWidth={1.5} isAnimationActive={false} />
+            strokeWidth={3} isAnimationActive={false} />
           <Tooltip
             contentStyle={{
-              background: '#0a0d18', border: `1px solid ${color}40`,
-              borderRadius: 8, fontSize: 11, padding: '5px 10px',
-              boxShadow: `0 4px 20px #00000080, 0 0 20px ${color}20`,
+              background: '#ffffff', border: `3px solid ${color}`,
+              borderRadius: 10, fontSize: 14, padding: '8px 14px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             }}
-            itemStyle={{ color }}
+            itemStyle={{ color, fontWeight: 900 }}
             labelFormatter={() => ''}
             formatter={(v) => [`${v?.toFixed(2)}${unit}`, label]}
           />
@@ -82,14 +81,14 @@ export default function SensorChart({ machine }) {
   }, [machine?.cycle])
 
   return (
-    <div className="card" style={{ padding: 18 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+    <div className="card" style={{ padding: 24 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
         <span className="label">Sensor Streams</span>
-        <span style={{ fontSize: 9, color: '#2a3050' }}>
+        <span style={{ fontSize: 13, color: '#333333', fontWeight: 800 }}>
           last {BUFFER_SIZE}s · cycle {machine?.cycle ?? '—'}
         </span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
         {CHARTS.map(c => (
           <MiniChart key={c.key} data={chartData} dataKey={c.key}
             color={c.color} label={c.label} unit={c.unit} baseline={c.baseline} />

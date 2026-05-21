@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { useWebSocket } from './hooks/useWebSocket'
 import NavShell       from './components/NavShell'
 import OverviewPage   from './pages/OverviewPage'
@@ -8,14 +8,13 @@ import AnalyticsPage  from './pages/AnalyticsPage'
 import CostsPage      from './pages/CostsPage'
 import BlockchainPage from './pages/BlockchainPage'
 import AIPage         from './pages/AIPage'
-import Landing        from './pages/Landing'
+import Landing3D      from './pages/Landing3D'
 
 const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:8000/ws/factory'
 
 // ── Dashboard shell (all /dashboard/* routes) ─────────────────────────────────
 function Dashboard() {
   const { data, status, lastUpdate, recommendations } = useWebSocket(WS_URL)
-  const navigate = useNavigate()
 
   const [route, setRoute] = useState(
     window.location.pathname.replace('/dashboard', '') || '/'
@@ -73,8 +72,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/"           element={<Landing />} />
-        <Route path="/dashboard"  element={<Dashboard />} />
+        <Route path="/"            element={<Landing3D />} />
+        <Route path="/dashboard"   element={<Dashboard />} />
         <Route path="/dashboard/*" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
